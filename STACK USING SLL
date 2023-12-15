@@ -1,67 +1,105 @@
 #include <iostream> 
+#define SIZE 5 
 using namespace std; 
-class CNode { 
+class STACK { 
 private: 
- int data; 
- CNode* next; // Change "new" to "next" 
- friend class CLL; 
-}; 
-class CLL { 
+ int num[SIZE]; 
+ int top; 
 public: 
- CLL(); 
- ~CLL(); 
- bool empty() const; 
- const int front() const; 
- const int back() const; // Add back() function declaration 
- void advance(); 
- void add(const int); 
- void remove(); 
-private: 
- CNode* cursor; 
+ STACK(); //defualt constructor 
+ int push(int); 
+ int pop(); 
+ int isEmpty(); 
+ int isFull(); 
+ void displayItems(); 
 }; 
-CLL::CLL() { 
- cursor = new CNode(); // Initialize cursor with a new node 
- cursor->next = cursor; // Point to itself to create an empty 
-circular list 
+STACK::STACK() 
+{ 
+ top = -1; 
 } 
-CLL::~CLL() { 
- while (!empty()) { 
- remove(); 
+int STACK::isEmpty() 
+{ 
+ if (top == -1) 
+ return 1; 
+ else 
+ return 0; 
+} 
+int STACK::isFull() 
+{ 
+ if (top == (SIZE - 1)) 
+ return 1; 
+ else 
+ return 0; 
+} 
+int STACK::push(int n) 
+{ 
+ //check stack is full or not 
+ if (isFull()) { 
+ return 0; 
  } 
+ ++top; 
+ num[top] = n; 
+ return n; 
 } 
-bool CLL::empty() const { 
- return (cursor->next == cursor); 
+int STACK::pop() 
+{ 
+ //to store and print which number 
+ //is deleted 
+ int temp; 
+ //check for empty 
+ if (isEmpty()) 
+ return 0; 
+ temp = num[top]; 
+ --top; 
+ return temp; 
 } 
-const int CLL::front() const { 
- return (cursor->next->data); 
+void STACK::displayItems() 
+{ 
+ int i; //for loop 
+ cout << "STACK is: "; 
+ for (i = (top); i >= 0; i--) 
+ cout << num[i] << " "; 
+ cout << endl; 
 } 
-const int CLL::back() const { 
- return (cursor->data); 
-} 
-void CLL::advance() { 
- cursor = cursor->next; 
-} 
-void CLL::add(const int num) { 
- CNode* newNode = new CNode(); 
- newNode->data = num; 
- newNode->next = cursor->next; 
- cursor->next = newNode; 
-} 
-void CLL::remove() { 
- CNode* old = cursor->next; 
- cout << "Deleted node is " << old->data; 
- cursor->next = old->next; 
- delete (old); 
-} 
-int main() { 
- CLL myCircularList; 
- myCircularList.add(1); 
- myCircularList.add(2); 
- myCircularList.add(3); 
- cout << "Front: " << myCircularList.front() << endl; 
- cout << "Back: " << myCircularList.back() << endl; 
- myCircularList.remove(); 
- cout << "Front after removal: " << myCircularList.front() << 
-endl; 
+// Main code 
+int main() 
+{ 
+ //declare object 
+ STACK stk; 
+ int choice, n, temp; 
+ do { 
+ cout << endl; 
+ cout << "0 - Exit." << endl; 
+ cout << "1 - Push Item." << endl; 
+ cout << "2 - Pop Item." << endl; 
+ cout << "3 - Display Items (Print STACK)." << endl; 
+ cout << "Enter your choice: "; 
+ cin >> choice; 
+ switch (choice) { 
+ case 0: 
+ break; 
+ case 1: 
+ cout << "Enter item to insert: "; 
+ cin >> n; 
+ temp = stk.push(n); 
+ if (temp == 0) 
+ cout << "STACK is FULL." << endl; 
+ else 
+ cout << temp << " inserted." << endl; 
+ break; 
+ case 2: 
+ temp = stk.pop(); 
+ if (temp == 0) 
+ cout << "STACK IS EMPTY." << endl; 
+ else 
+ cout << temp << " is removed (popped)." << endl; 
+ break; 
+ case 3: 
+ stk.displayItems(); 
+ break; 
+ default: 
+ cout << "An Invalid choice." << endl; 
+ } 
+ } while (choice != 0); 
  return 0; 
 }
